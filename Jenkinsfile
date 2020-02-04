@@ -52,11 +52,11 @@ pipeline {
             steps {
                 echo 'Test'
                 dir('code/frontend'){
-                    sh 'docker-compose -f docker-compose-e2e.yml up -d frontend backend' 
+                    sh 'npm run test' 
                 }
-                // dir('code/backend'){
-                //     sh 'npm run test'  
-                // }
+                dir('code/backend'){
+                    sh 'npm run test'  
+                }
             }
         }
         stage('e2e Test') {
