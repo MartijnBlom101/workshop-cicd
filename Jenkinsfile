@@ -52,11 +52,11 @@ pipeline {
             steps {
                 echo 'Test'
                 dir('code/frontend'){
-                    sh 'npm run test'  
+                    sh 'docker-compose -f docker-compose-e2e.yml up -d frontend backend' 
                 }
-                dir('code/backend'){
-                    sh 'npm run test'  
-                }
+                // dir('code/backend'){
+                //     sh 'npm run test'  
+                // }
             }
         }
         stage('e2e Test') {
@@ -66,10 +66,10 @@ pipeline {
             post {
                 always {
                     echo 'Cleanup'
-                    dir('code/frontend'){
+                    dir('ci/code'){
                         sh 'docker-compose -f docker-compose-e2e.yml down --rmi=all -v' 
                     }
-                    dir('code/backend'){
+                    dir('ci/jenkins/'){
                         sh 'docker-compose -f docker-compose-e2e.yml down --rmi=all -v' 
                     }
                 }
@@ -78,6 +78,9 @@ pipeline {
         stage('Deploy') {
             steps {                
                 echo 'Deploy'
+                dir('ci/jenkins/'){
+                    sh 'docker-compose -f docker-compose.yml up -d'
+                }
             }
         }
     }
