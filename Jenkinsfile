@@ -37,6 +37,12 @@ pipeline {
             }
             steps {
                 echo 'Analyze' 
+                dir('code/frontend'){
+                    sh 'npm run list'  
+                }
+                dir('code/backend'){
+                    sh 'npm run list'  
+                }
             }
         }
         stage('Unit Test') {
@@ -45,6 +51,12 @@ pipeline {
             }
             steps {
                 echo 'Test'
+                dir('code/frontend'){
+                    sh 'npm run test'  
+                }
+                dir('code/backend'){
+                    sh 'npm run test'  
+                }
             }
         }
         stage('e2e Test') {
@@ -54,6 +66,12 @@ pipeline {
             post {
                 always {
                     echo 'Cleanup'
+                    dir('code/frontend'){
+                        sh 'docker-compose -f docker-compose-e2e.yml down --rmi=all -v' 
+                    }
+                    dir('code/backend'){
+                        sh 'docker-compose -f docker-compose-e2e.yml down --rmi=all -v' 
+                    }
                 }
             }
         }
